@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#perlinImageNoiseCalc").submit(function (e) {
+                e.preventDefault(); // avoid to execute the actual submit of the form.
+
+                let form = $(this);
+                let url = form.attr('action');
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: form.serialize(), // serializes the form's elements.
+                    success: function (data) {
+                        $("#perlinImageNoiseCalc")[0].reset();
+                        console.log(data);
+                        alert(data);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="container">
+    <h4>Perlin Image Noise Calculator</h4>
+    <form class="form-horizontal" method="post" action="/noisecalc" id="perlinImageNoiseCalc">
+        <div class="form-group">
+            <div class="col-md-12">
+                <div class="col-md-5 ">
+                    <label>Image Width </label>
+                    <input type="number" name="x" class="form-control"/>
+                </div>
+                <div class="col-md-5 ">
+                    <label>Image Height</label>
+                    <input type="number" name="y" class="form-control"/>
+                </div>
+                <div class="col-md-2">
+                    <input type="submit" value="Submit" class="btn btn-info">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

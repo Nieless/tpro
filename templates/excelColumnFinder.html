@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style>
+        .boxed {
+            border: 1px solid black;
+            padding: 3px;
+            margin: 1px;
+            border-radius: 5px;
+            text-align: center;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#excelColumnFinder").submit(function (e) {
+                e.preventDefault(); // avoid to execute the actual submit of the form.
+
+                let formData = $(this).serializeArray();
+                let columnToStart = formData[0].value;
+                let noOfRows = formData[1].value;
+                let noOfColumns = formData[2].value;
+
+                function columnNames(n) {
+                    let result = [];
+
+                    const indexA = "A".charCodeAt(0);
+                    const indexZ = "Z".charCodeAt(0);
+
+                    let alphabetLength = indexZ - indexA + 1;
+                    const repeatNum = Math.floor(n / alphabetLength);
+
+                    let startIndex = 0;
+                    let startString = "";
+                    let string = "";
+
+                    while (startIndex <= repeatNum) {
+                        if (startIndex > 0) {
+                            startString = String.fromCharCode(indexA + startIndex - 1);
+                        }
+
+                        if (startIndex === repeatNum) {
+                            alphabetLength = n % alphabetLength;
+                        }
+
+                        for (var i = 0; i < alphabetLength; i++) {
+                            string = String.fromCharCode(indexA + i);
+
+                            result.push(startString + string);
+                        }
+                        startIndex++;
+                    }
+                    return result;
+                }
+
+                let n = 26;
+                if (columnToStart.length > 1) {
+                    n += 26 * 26
+                }
+                let combinations = columnNames(n);
+
+                let startIndex = combinations.indexOf(columnToStart);
+                let data = combinations.slice(startIndex, startIndex + noOfRows * noOfColumns);
+
+                let dataTable = $("#dataTable").html('');
+
+                $.each(data, function (key, valueObj) {
+                    dataTable.append('<div class="col-md-4"><div class="boxed">' + valueObj + '</div></div>');
+                });
+            });
+        });
+
+
+    </script>
+</head>
+<body>
+<div class="container">
+    <h4>Excel Column Finder</h4>
+    <form class="form-horizontal" method="post" id="excelColumnFinder">
+        <div class="form-group">
+            <div class="col-md-12">
+                <div class="col-md-4 ">
+                    <input type="text" maxlength="2" minlength="1" onkeypress="return /[a-z]/i.test(event.key)"
+                           name="column_to_start" placeholder="Column to start" class="form-control"/>
+                </div>
+                <div class="col-md-3 ">
+                    <input type="number" name="no_of_columns" placeholder="No of columns" class="form-control"/>
+                </div>
+                <div class="col-md-3 ">
+                    <input type="number" name="no_of_rows" placeholder="No of rows" class="form-control"/>
+                </div>
+                <div class="col-md-2">
+                    <input type="submit" value="Submit" class="btn btn-info">
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="data">
+        <div class="col-md-12" id="dataTable">
+        </div>
+    </div>
+</div>
+</body>
+</html>

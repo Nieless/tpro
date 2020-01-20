@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<body>
+<head>
+    <link rel="stylesheet" type="text/css"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style>
+        .boxed {
+            border: 1px solid black;
+            padding: 3px;
+            margin: 1px;
+            border-radius: 5px;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#crawlerForm").submit(function (e) {
+                e.preventDefault(); // avoid to execute the actual submit of the form.
+
+                let form = $(this);
+                let url = form.attr('action');
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: form.serialize(), // serializes the form's elements.
+                    success: function (data) {
+                        $("#crawlerForm")[0].reset();
+
+                        data = JSON.parse(data);
+
+                        let dataDiv = $("#urlDiv").html('');
+                        dataDiv.append('<span> URL to be captured: ' + data.url + '</span>');
+
+                        let counts = data.word_counts;
+
+                        let dataTable = $("#dataTable").html('');
+                        $.each(counts, function (key, valueObj) {
+                            dataTable.append('<div class="col-md-2"><div class="boxed">' + key + ' - ' + valueObj + '</div></div>');
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<div class="container">
+    <form class="form-horizontal" method="post" id="crawlerForm" action="/crawling">
+        <div class="form-group">
+            <div class="col-md-12">
+                <div class="col-md-11">
+                    <input type="text" name="url" placeholder="URL to crawl" class="form-control"/>
+                </div>
+                <div class="col-md-1">
+                    <input type="submit" value="Submit" class="btn btn-info">
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="data">
+        <div id="urlDiv"></div>
+        <br>
+        <div class="col-md-12" id="dataTable">
+        </div>
+    </div>
+</div>
+</body>
+</html>

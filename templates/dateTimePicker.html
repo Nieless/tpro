@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css"/>
+    <script>
+        $(document).ready(function () {
+            $('#datetimepicker').datetimepicker({
+                // use24hours: true,
+                format: 'YYYY-MM-DDTHH:mm:SSZ'
+            });
+
+            $("#dateTimeForm").submit(function (e) {
+                e.preventDefault(); // avoid to execute the actual submit of the form.
+
+                var form = $(this);
+                var url = form.attr('action');
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: form.serialize(), // serializes the form's elements.
+                    success: function (data) {
+                        $("#dateTimeForm")[0].reset();
+                        alert(data);
+                    }
+                });
+            });
+        });
+
+    </script>
+</head>
+<body>
+<div class="container">
+    <h4>DateTime updater</h4>
+    <form class="form-horizontal" method="post" id="dateTimeForm" action="/datetime">
+        <div class="row">
+            <div class='col-sm-6'>
+                <div class="form-group">
+                    <div class='input-group date' id='datetimepicker'>
+                        <input type='text' class="form-control" name="datetime"/>
+                        <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class='col-sm-6'>
+                <input type="submit" value="Submit" class="btn btn-info">
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+
+</html>
