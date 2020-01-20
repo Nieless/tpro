@@ -15,8 +15,6 @@ func main() {
 	myRouter.HandleFunc("/datetime", GetDateTime).Methods("GET")
 	myRouter.HandleFunc("/datetime", PostDateTime).Methods("POST")
 
-	myRouter.HandleFunc("/ecf", GetExcelColumnFinder).Methods("GET")
-
 	err := tpro.ListenAndServe(tpro.MustGetEnv("DATE_TIME_SERVICE_HTTP_PORT"), myRouter)
 	if err != nil {
 		panic(err)
@@ -26,11 +24,6 @@ func main() {
 // GetDateTime serves the html file
 func GetDateTime(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "./templates/dateTimePicker.html")
-}
-
-// GetExcelColumnFinder serves the html file
-func GetExcelColumnFinder(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "./templates/excelColumnFinder.html")
 }
 
 // PostDateTime 
